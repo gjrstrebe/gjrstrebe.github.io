@@ -6,34 +6,255 @@
   <title>AskTechDad - App Hub</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f172a; color: #f8fafc; padding: 2rem; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: #0f172a;
+      color: #f8fafc;
+      padding: 2rem 1rem;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
     .container { max-width: 900px; margin: 0 auto; }
-    header { text-align: center; margin-bottom: 3rem; }
-    h1 { font-size: 2.5rem; color: #38bdf8; margin-bottom: 0.5rem; }
-    p { color: #94a3b8; font-size: 1.1rem; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
-    .card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 1.5rem; text-decoration: none; color: inherit; transition: transform 0.2s, border-color 0.2s; }
-    .card:hover { transform: translateY(-4px); border-color: #38bdf8; }
-    .card h2 { font-size: 1.25rem; color: #f1f5f9; margin-bottom: 0.5rem; text-transform: capitalize; }
-    .card p { font-size: 0.95rem; color: #94a3b8; line-height: 1.4; }
-    .loading { text-align: center; color: #64748b; font-style: italic; }
+    
+    /* Header & Branding */
+    header { text-align: center; margin-bottom: 2rem; position: relative; }
+    .avatar-wrapper {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 1rem;
+      border-radius: 50%;
+      border: 3px solid #38bdf8;
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.3);
+      overflow: hidden;
+      background: #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .profile-img { width: 100%; height: 100%; object-fit: cover; }
+    .avatar-placeholder { font-size: 2.8rem; }
+    
+    h1 { font-size: 2.75rem; color: #38bdf8; margin-bottom: 0.25rem; font-weight: 800; letter-spacing: -0.02em; }
+    p.subtitle { color: #94a3b8; font-size: 1.15rem; }
+
+    /* Ko-fi Buttons */
+    .kofi-container { text-align: center; margin: 1.25rem 0; }
+    .kofi-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: #ff5e5b;
+      color: #ffffff;
+      font-weight: 700;
+      padding: 0.75rem 1.5rem;
+      border-radius: 10px;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(255, 94, 91, 0.3);
+      transition: all 0.2s ease;
+    }
+    .kofi-btn:hover { background-color: #e04b48; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 94, 91, 0.4); }
+
+    /* Intro & Campfire Banner Box */
+    .intro-box {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      text-align: center;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    .banner-img-wrapper {
+      width: 100%;
+      max-height: 220px;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+      border: 1px solid #334155;
+      background: #0f172a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .banner-img { width: 100%; height: 220px; object-fit: cover; }
+    .banner-placeholder { font-size: 3rem; padding: 2rem; color: #f59e0b; }
+
+    .intro-box p { color: #cbd5e1; font-size: 1rem; max-width: 720px; margin: 0 auto; line-height: 1.6; }
+
+    /* Controls Bar (Search) */
+    .controls-bar {
+      display: flex;
+      gap: 1rem;
+      margin: 2.25rem 0 1rem 0;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .section-title { font-size: 1.35rem; color: #f8fafc; font-weight: 700; }
+    .search-input {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #f8fafc;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      width: 100%;
+      max-width: 280px;
+      transition: border-color 0.2s;
+    }
+    .search-input:focus { border-color: #38bdf8; }
+
+    /* Card Grid */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1.25rem; }
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .card:hover { transform: translateY(-4px); border-color: #38bdf8; box-shadow: 0 10px 20px -5px rgba(56, 189, 248, 0.15); }
+    .card h3 { font-size: 1.2rem; color: #38bdf8; margin-bottom: 0.4rem; text-transform: capitalize; }
+    .card p { font-size: 0.9rem; color: #94a3b8; line-height: 1.4; flex-grow: 1; }
+    .card .tag {
+      align-self: flex-start;
+      background: #0284c7;
+      color: #ffffff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      margin-top: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Contact Card */
+    .contact-card {
+      background: #1e293b;
+      border: 1px dashed #38bdf8;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      margin-top: 3rem;
+    }
+    .contact-card h3 { color: #f8fafc; font-size: 1.2rem; margin-bottom: 0.5rem; }
+    .contact-card a { color: #38bdf8; text-decoration: none; font-weight: 600; }
+    .contact-card a:hover { text-decoration: underline; }
+
+    /* Loading State */
+    .loading-state {
+      text-align: center;
+      color: #64748b;
+      font-style: italic;
+      grid-column: 1 / -1;
+      padding: 3rem 1rem;
+      background: #1e293b;
+      border-radius: 12px;
+      border: 1px dashed #334155;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #334155;
+      color: #64748b;
+      font-size: 0.85rem;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>AskTechDad Apps</h1>
-      <p>Select an application below to open the tool.</p>
+      <!-- SUNGLASSES AVATAR IMAGE -->
+      <div class="avatar-wrapper">
+        <img src="IMG_1098_Original.jpeg" alt="AskTechDad Profile" class="profile-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <div class="avatar-placeholder" style="display:none;">🕶️</div>
+      </div>
+      <h1>AskTechDad</h1>
+      <p class="subtitle">Custom Web Applications & Community Utilities</p>
+
+      <!-- TOP KO-FI LINK -->
+      <div class="kofi-container">
+        <a href="https://ko-fi.com/asktechdad" target="_blank" rel="noopener noreferrer" class="kofi-btn">
+          ☕ Support on Ko-fi
+        </a>
+      </div>
     </header>
 
-    <div id="app-grid" class="grid">
-      <div class="loading">Loading applications...</div>
+    <!-- INTRO & CAMPFIRE BANNER BOX -->
+    <div class="intro-box">
+      <!-- CAMPFIRE BANNER IMAGE -->
+      <div class="banner-img-wrapper">
+        <img src="IMG_8651.png" alt="AskTechDad Banner" class="banner-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <div class="banner-placeholder" style="display:none;">🔥⛺💻</div>
+      </div>
+      <p>I design and host free, lightweight web applications and utility tools to solve real-world and community problems. Tips directly support server hosting, domains, and keeping these projects free and accessible for everyone! ⚡</p>
     </div>
+
+    <!-- CONTROLS HEADER -->
+    <div class="controls-bar">
+      <h2 class="section-title">Available Tools & Utilities</h2>
+      <input type="text" id="search-input" class="search-input" placeholder="Search tools..." oninput="filterRepos()">
+    </div>
+
+    <!-- DYNAMIC REPO GRID -->
+    <div id="app-grid" class="grid">
+      <div class="loading-state">Fetching live applications from GitHub...</div>
+    </div>
+
+    <!-- CONTACT SECTION -->
+    <div class="contact-card">
+      <h3>Need a Custom Tool or Found a Bug?</h3>
+      <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 0.5rem;">Reach out directly for feature requests, bug reports, or collaboration:</p>
+      <a href="mailto:Asktechdadtech@gmail.com">Asktechdadtech@gmail.com</a>
+    </div>
+
+    <!-- BOTTOM KO-FI LINK & FOOTER -->
+    <footer>
+      <div class="kofi-container">
+        <p style="color: #94a3b8; margin-bottom: 0.75rem;">Find these tools helpful?</p>
+        <a href="https://ko-fi.com/asktechdad" target="_blank" rel="noopener noreferrer" class="kofi-btn">
+          ☕ Buy Me a Coffee on Ko-fi
+        </a>
+      </div>
+      <p style="margin-top: 1.5rem;">&copy; 2026 AskTechDad. All rights reserved.</p>
+    </footer>
   </div>
 
   <script>
     const USERNAME = 'gjrstrebe';
     const HUB_REPO = 'gjrstrebe.github.io';
+    
+    // Optional list of repos you want to manually hide from the public hub
+    const EXCLUDED_REPOS = [
+      // Add any repo names here if you want to hide them, e.g.: 'Muddskip'
+    ];
+
+    let allToolRepos = [];
+
+    // Friendly display name formatter
+    function formatRepoName(name) {
+      if (name.toLowerCase() === 'svswarroom') return 'SVS War Room';
+      if (name.toLowerCase() === 'svswarrokm') return 'SVS War Room (Rokm)';
+      if (name.toLowerCase() === 'wos-planner') return 'WOS Planner';
+      if (name.toLowerCase() === 'wos-rank') return 'WOS Rank';
+      if (name.toLowerCase() === 'wosvoteportal') return 'WOS Vote Portal';
+      if (name.toLowerCase() === 'drwallpanmudrush') return 'Drywall Pan Mud Rush 🐍';
+
+      return name
+        .replace(/([a-z])([A-Z])/g, '$1 $2')
+        .replace(/[-_]/g, ' ')
+        .trim();
+    }
 
     async function fetchUserRepos() {
       const grid = document.getElementById('app-grid');
@@ -41,27 +262,55 @@
         const response = await fetch(`https://api.github.com/users/${USERNAME}/repos?per_page=100`);
         const repos = await response.json();
         
-        // Filter out the main hub repo and repos that don't have Pages enabled
-        const toolRepos = repos.filter(repo => repo.name !== HUB_REPO && repo.has_pages);
+        allToolRepos = repos.filter(repo => 
+          repo.name !== HUB_REPO && 
+          repo.has_pages && 
+          !EXCLUDED_REPOS.includes(repo.name)
+        );
 
-        if (toolRepos.length === 0) {
-          grid.innerHTML = '<div class="loading">No active tools found.</div>';
-          return;
-        }
-
-        grid.innerHTML = toolRepos.map(repo => `
-          <a href="/${repo.name}/" class="card">
-            <h2>${repo.name.replace(/-/g, ' ')}</h2>
-            <p>${repo.description || 'Custom web application and utility.'}</p>
-          </a>
-        `).join('');
+        renderGrid(allToolRepos);
 
       } catch (err) {
-        grid.innerHTML = '<div class="loading">Failed to load applications.</div>';
+        grid.innerHTML = '<div class="loading-state">Unable to load applications at this time. Please check back shortly.</div>';
       }
+    }
+
+    function renderGrid(repos) {
+      const grid = document.getElementById('app-grid');
+      
+      if (repos.length === 0) {
+        grid.innerHTML = '<div class="loading-state">No matching applications found.</div>';
+        return;
+      }
+
+      grid.innerHTML = repos.map(repo => {
+        const formattedTitle = formatRepoName(repo.name);
+        const description = repo.description || 'Custom web application and utility tool.';
+
+        return `
+          <a href="/${repo.name}/" class="card">
+            <div>
+              <h3>${formattedTitle}</h3>
+              <p>${description}</p>
+            </div>
+            <span class="tag">Web App</span>
+          </a>
+        `;
+      }).join('');
+    }
+
+    function filterRepos() {
+      const query = document.getElementById('search-input').value.toLowerCase();
+      const filtered = allToolRepos.filter(repo => {
+        const title = formatRepoName(repo.name).toLowerCase();
+        const desc = (repo.description || '').toLowerCase();
+        return title.includes(query) || desc.includes(query);
+      });
+      renderGrid(filtered);
     }
 
     fetchUserRepos();
   </script>
 </body>
 </html>
+
