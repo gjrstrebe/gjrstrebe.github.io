@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AskTechDad - Tools & Applications</title>
+  <title>AskTechDad - App Hub</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f172a; color: #f8fafc; padding: 2rem; }
@@ -14,38 +14,54 @@
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
     .card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 1.5rem; text-decoration: none; color: inherit; transition: transform 0.2s, border-color 0.2s; }
     .card:hover { transform: translateY(-4px); border-color: #38bdf8; }
-    .card h2 { font-size: 1.25rem; color: #f1f5f9; margin-bottom: 0.5rem; }
-    .card p { font-size: 0.95rem; color: #94a3b8; }
+    .card h2 { font-size: 1.25rem; color: #f1f5f9; margin-bottom: 0.5rem; text-transform: capitalize; }
+    .card p { font-size: 0.95rem; color: #94a3b8; line-height: 1.4; }
+    .loading { text-align: center; color: #64748b; font-style: italic; }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>AskTechDad App Hub</h1>
-      <p>Select a tool below to launch the application directly.</p>
+      <h1>AskTechDad Apps</h1>
+      <p>Select an application below to open the tool.</p>
     </header>
 
-    <div class="grid">
-      <!-- Tool Card 1 -->
-      <a href="/Svswarroom/" class="card">
-        <h2>SVS War Room</h2>
-        <p>Whiteout Survival alliance state vs state planning and strategy tools.</p>
-      </a>
-
-      <!-- Tool Card 2 (Replace with your actual repo name) -->
-      <a href="/your-second-repo/" class="card">
-        <h2>Second Companion Tool</h2>
-        <p>Description of your second Whiteout Survival or utility app.</p>
-      </a>
-
-      <!-- Tool Card 3 (Replace with your actual repo name) -->
-      <a href="/your-third-repo/" class="card">
-        <h2>Third Tool</h2>
-        <p>Description of your third web application.</p>
-      </a>
-      
-      <!-- Add more cards using <a href="/repo-name/" class="card"> for your other apps -->
+    <div id="app-grid" class="grid">
+      <div class="loading">Loading applications...</div>
     </div>
   </div>
+
+  <script>
+    const USERNAME = 'gjrstrebe';
+    const HUB_REPO = 'gjrstrebe.github.io';
+
+    async function fetchUserRepos() {
+      const grid = document.getElementById('app-grid');
+      try {
+        const response = await fetch(`https://api.github.com/users/${USERNAME}/repos?per_page=100`);
+        const repos = await response.json();
+        
+        // Filter out the main hub repo and repos that don't have Pages enabled
+        const toolRepos = repos.filter(repo => repo.name !== HUB_REPO && repo.has_pages);
+
+        if (toolRepos.length === 0) {
+          grid.innerHTML = '<div class="loading">No active tools found.</div>';
+          return;
+        }
+
+        grid.innerHTML = toolRepos.map(repo => `
+          <a href="/${repo.name}/" class="card">
+            <h2>${repo.name.replace(/-/g, ' ')}</h2>
+            <p>${repo.description || 'Custom web application and utility.'}</p>
+          </a>
+        `).join('');
+
+      } catch (err) {
+        grid.innerHTML = '<div class="loading">Failed to load applications.</div>';
+      }
+    }
+
+    fetchUserRepos();
+  </script>
 </body>
 </html>
